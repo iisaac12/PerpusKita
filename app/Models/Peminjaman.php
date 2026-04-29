@@ -45,7 +45,7 @@ class Peminjaman extends Model
     private static function generateId(): string
     {
         $prefix = 'PMJ-';
-        $lastId = self::orderByDesc('created_at')->value('id_peminjaman');
+        $lastId = self::orderByDesc('id_peminjaman')->value('id_peminjaman');
 
         $nextNumber = $lastId ? ((int) substr($lastId, strlen($prefix))) + 1 : 1;
 

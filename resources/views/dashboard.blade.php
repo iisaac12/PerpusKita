@@ -5,42 +5,81 @@
 
 @section('content')
 <section class="dashboard-grid">
-    <!-- Stat Cards -->
-    <div class="glass-card stat-card">
-        <div class="stat-header">
-            <span>Total Koleksi Buku</span>
-            <span class="material-symbols-rounded" style="color: var(--primary);">auto_stories</span>
+    @if(Auth::user()->isAdmin())
+        <!-- Admin Stat Cards -->
+        <div class="glass-card stat-card">
+            <div class="stat-header">
+                <span>Total Koleksi Buku</span>
+                <span class="material-symbols-rounded" style="color: var(--primary);">auto_stories</span>
+            </div>
+            <div class="stat-value">{{ number_format($stats['total_buku']) }}</div>
+            <div class="stat-trend trend-up">
+                <span class="material-symbols-rounded" style="font-size: 14px;">category</span>
+                {{ $stats['total_kategori'] }} Kategori tersedia
+            </div>
         </div>
-        <div class="stat-value">{{ number_format($stats['total_buku']) }}</div>
-        <div class="stat-trend trend-up">
-            <span class="material-symbols-rounded" style="font-size: 14px;">category</span>
-            {{ $stats['total_kategori'] }} Kategori tersedia
-        </div>
-    </div>
 
-    <div class="glass-card stat-card">
-        <div class="stat-header">
-            <span>Peminjaman Aktif</span>
-            <span class="material-symbols-rounded" style="color: #f87171;">schedule</span>
+        <div class="glass-card stat-card">
+            <div class="stat-header">
+                <span>Peminjaman Aktif</span>
+                <span class="material-symbols-rounded" style="color: #f87171;">schedule</span>
+            </div>
+            <div class="stat-value">{{ $stats['peminjaman_aktif'] }}</div>
+            <div class="stat-trend trend-down">
+                <span class="material-symbols-rounded" style="font-size: 14px;">error</span>
+                Perlu dipantau
+            </div>
         </div>
-        <div class="stat-value">{{ $stats['peminjaman_aktif'] }}</div>
-        <div class="stat-trend trend-down">
-            <span class="material-symbols-rounded" style="font-size: 14px;">error</span>
-            Perlu dipantau
-        </div>
-    </div>
 
-    <div class="glass-card stat-card">
-        <div class="stat-header">
-            <span>Anggota Terdaftar</span>
-            <span class="material-symbols-rounded" style="color: var(--secondary);">person</span>
+        <div class="glass-card stat-card">
+            <div class="stat-header">
+                <span>Anggota Terdaftar</span>
+                <span class="material-symbols-rounded" style="color: var(--secondary);">person</span>
+            </div>
+            <div class="stat-value">{{ $stats['total_peminjam'] }}</div>
+            <div class="stat-trend trend-up">
+                <span class="material-symbols-rounded" style="font-size: 14px;">person_add</span>
+                Terus bertambah
+            </div>
         </div>
-        <div class="stat-value">{{ $stats['total_peminjam'] }}</div>
-        <div class="stat-trend trend-up">
-            <span class="material-symbols-rounded" style="font-size: 14px;">person_add</span>
-            Terus bertambah
+    @else
+        <!-- User Stat Cards -->
+        <div class="glass-card stat-card">
+            <div class="stat-header">
+                <span>Buku yang Saya Pinjam</span>
+                <span class="material-symbols-rounded" style="color: var(--secondary);">auto_stories</span>
+            </div>
+            <div class="stat-value">{{ $stats['buku_dipinjam'] }}</div>
+            <div class="stat-trend trend-up">
+                <span class="material-symbols-rounded" style="font-size: 14px;">verified</span>
+                Status: Aktif
+            </div>
         </div>
-    </div>
+
+        <div class="glass-card stat-card">
+            <div class="stat-header">
+                <span>Menunggu Verifikasi</span>
+                <span class="material-symbols-rounded" style="color: var(--primary);">pending_actions</span>
+            </div>
+            <div class="stat-value">{{ $stats['menunggu_verifikasi'] }}</div>
+            <div class="stat-trend" style="color: var(--text-muted);">
+                <span class="material-symbols-rounded" style="font-size: 14px;">hourglass_empty</span>
+                Silakan hubungi admin
+            </div>
+        </div>
+
+        <div class="glass-card stat-card">
+            <div class="stat-header">
+                <span>Total Riwayat Baca</span>
+                <span class="material-symbols-rounded" style="color: #4ade80;">history</span>
+            </div>
+            <div class="stat-value">{{ $stats['total_history'] }}</div>
+            <div class="stat-trend trend-up">
+                <span class="material-symbols-rounded" style="font-size: 14px;">military_tech</span>
+                Terus tingkatkan literasi!
+            </div>
+        </div>
+    @endif
 </section>
 
 <section class="quick-actions" style="margin-bottom: 3rem;">

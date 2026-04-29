@@ -42,7 +42,7 @@ class Buku extends Model
     private static function generateId(): string
     {
         $prefix = 'BK-';
-        $lastId = self::withTrashed()->orderByDesc('created_at')->value('id_buku');
+        $lastId = self::withTrashed()->orderByDesc('id_buku')->value('id_buku');
 
         $nextNumber = $lastId ? ((int) substr($lastId, strlen($prefix))) + 1 : 1;
 

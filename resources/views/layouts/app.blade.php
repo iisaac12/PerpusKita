@@ -71,8 +71,8 @@
                 </li>
                 @endif
 
-                <li class="nav-item">
-                    <a href="#">
+                <li class="nav-item {{ Request::is('history*') ? 'active' : '' }}">
+                    <a href="{{ route('history') }}">
                         <span class="material-symbols-rounded">history</span>
                         <span class="nav-text">History</span>
                     </a>

@@ -38,7 +38,7 @@ class Kategori extends Model
     private static function generateId(): string
     {
         $prefix = 'KAT-';
-        $lastId = self::withTrashed()->orderByDesc('created_at')->value('id_kategori');
+        $lastId = self::withTrashed()->orderByDesc('id_kategori')->value('id_kategori');
 
         $nextNumber = $lastId ? ((int) substr($lastId, strlen($prefix))) + 1 : 1;
 

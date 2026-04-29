@@ -19,10 +19,14 @@ class PeminjamanController extends Controller
         $user = Auth::user();
         
         if ($user->isAdmin()) {
-            $peminjaman = Peminjaman::with(['peminjam', 'buku'])->latest()->paginate(10);
+            $peminjaman = Peminjaman::with(['peminjam', 'buku'])
+                ->whereNotIn('status', ['selesai', 'dibatalkan'])
+                ->latest()
+                ->paginate(10);
         } else {
             $peminjaman = Peminjaman::with('buku')
                 ->where('id_peminjam', $user->id_peminjam)
+                ->whereNotIn('status', ['selesai', 'dibatalkan'])
                 ->latest()
                 ->paginate(10);
         }

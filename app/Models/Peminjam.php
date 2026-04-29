@@ -85,7 +85,7 @@ class Peminjam extends Authenticatable
     {
         $prefix = 'PM-';
         $lastId = self::withTrashed()
-            ->orderByDesc('created_at')
+            ->orderByDesc('id_peminjam')
             ->value('id_peminjam');
 
         if ($lastId) {

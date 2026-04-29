@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/library', [\App\Http\Controllers\LibraryController::class, 'index'])->name('library');
 
     Route::get('/borrowing', [\App\Http\Controllers\PeminjamanController::class, 'index'])->name('borrowing');
+    Route::get('/history', [\App\Http\Controllers\HistoryController::class, 'index'])->name('history');
     Route::get('/borrowing/create', [\App\Http\Controllers\PeminjamanController::class, 'create'])->name('borrowing.create');
     Route::post('/borrowing', [\App\Http\Controllers\PeminjamanController::class, 'store'])->name('borrowing.store');
     Route::patch('/borrowing/{id}/status', [\App\Http\Controllers\PeminjamanController::class, 'updateStatus'])->name('borrowing.status');
