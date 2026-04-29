@@ -339,6 +339,12 @@ header {
     box-shadow: 0 0 10px var(--primary-glow);
 }
 
+.form-control option {
+    background-color: var(--bg-color);
+    color: #fff;
+    padding: 10px;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .sidebar {
