@@ -68,7 +68,7 @@ class PeminjamanController extends Controller
         DB::beginTransaction();
         try {
             $tanggal_pinjam = \Carbon\Carbon::parse($request->tanggal_pinjam);
-            $tanggal_kembali = $tanggal_pinjam->copy()->addDays($request->lama_peminjaman);
+            $tanggal_kembali = $tanggal_pinjam->copy()->addDays((int) $request->lama_peminjaman);
 
             $peminjaman = Peminjaman::create([
                 'id_peminjam' => Auth::user()->id_peminjam,
