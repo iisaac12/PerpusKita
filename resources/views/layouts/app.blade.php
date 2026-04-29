@@ -48,20 +48,43 @@
                         <span class="nav-text">Borrowing</span>
                     </a>
                 </li>
+
+                @if(Auth::user()->isAdmin())
+                <div style="padding: 1rem 1rem 0.5rem; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Admin Tools</div>
+                <li class="nav-item {{ Request::is('admin/kategori*') ? 'active' : '' }}">
+                    <a href="{{ route('kategori.index') }}">
+                        <span class="material-symbols-rounded">category</span>
+                        <span class="nav-text">Kelola Kategori</span>
+                    </a>
+                </li>
+                <li class="nav-item {{ Request::is('admin/buku*') ? 'active' : '' }}">
+                    <a href="{{ route('buku.index') }}">
+                        <span class="material-symbols-rounded">book</span>
+                        <span class="nav-text">Kelola Buku</span>
+                    </a>
+                </li>
+                <li class="nav-item {{ Request::is('admin/report*') ? 'active' : '' }}">
+                    <a href="{{ route('report.index') }}">
+                        <span class="material-symbols-rounded">analytics</span>
+                        <span class="nav-text">Rekap Laporan</span>
+                    </a>
+                </li>
+                @endif
+
                 <li class="nav-item">
                     <a href="#">
                         <span class="material-symbols-rounded">history</span>
                         <span class="nav-text">History</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#">
+                <li class="nav-item {{ Request::is('profile*') ? 'active' : '' }}">
+                    <a href="{{ route('profile') }}">
                         <span class="material-symbols-rounded">settings</span>
                         <span class="nav-text">Settings</span>
                     </a>
                 </li>
                 <li class="nav-item" style="margin-top: auto;">
-                    <a href="#">
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <span class="material-symbols-rounded">logout</span>
                         <span class="nav-text">Logout</span>
                     </a>
@@ -78,17 +101,30 @@
                 </div>
                 
                 <div class="user-profile">
-                    <div class="avatar"></div>
+                    <div class="avatar" style="display: flex; align-items: center; justify-content: center; color: var(--bg-color); font-weight: 700;">
+                        {{ substr(Auth::user()->nama, 0, 1) }}
+                    </div>
                     <div class="user-info">
-                        <p style="font-size: 0.875rem; font-weight: 600;">Admin Perpus</p>
-                        <p style="font-size: 0.75rem; color: var(--text-muted);">Librarian Profile</p>
+                        <p style="font-size: 0.875rem; font-weight: 600;">{{ Auth::user()->nama }}</p>
+                        <p style="font-size: 0.75rem; color: var(--text-muted);">{{ ucfirst(Auth::user()->role) }} Profile</p>
                     </div>
                 </div>
             </header>
 
+            @if(session('success'))
+                <div class="glass-card" style="margin-bottom: 2rem; border-color: rgba(74, 222, 128, 0.2); background: rgba(74, 222, 128, 0.05); color: #4ade80; display: flex; align-items: center; gap: 0.75rem; padding: 1rem;">
+                    <span class="material-symbols-rounded">check_circle</span>
+                    {{ session('success') }}
+                </div>
+            @endif
+
             @yield('content')
         </main>
     </div>
+
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
 
     @yield('scripts')
 </body>
