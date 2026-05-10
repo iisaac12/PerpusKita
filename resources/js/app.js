@@ -34,10 +34,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
             
-            const rotateX = (y - centerY) / 20;
-            const rotateY = (centerX - x) / 20;
+            const maxTilt = 5; // Batasan kemiringan maksimum (derajat)
+            const intensity = 80; // Semakin besar angka ini, semakin halus gerakannya
             
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+            let rotateX = (y - centerY) / intensity;
+            let rotateY = (centerX - x) / intensity;
+            
+            // Berikan batasan (clamp) agar tidak terlalu miring
+            rotateX = Math.max(-maxTilt, Math.min(maxTilt, rotateX));
+            rotateY = Math.max(-maxTilt, Math.min(maxTilt, rotateY));
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
         });
         
         card.addEventListener('mouseleave', () => {
