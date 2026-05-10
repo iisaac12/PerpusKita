@@ -63,6 +63,12 @@
                         <span class="nav-text">Kelola Buku</span>
                     </a>
                 </li>
+                <li class="nav-item {{ Request::is('admin/member*') ? 'active' : '' }}">
+                    <a href="{{ route('member.index') }}">
+                        <span class="material-symbols-rounded">group</span>
+                        <span class="nav-text">Daftar Member</span>
+                    </a>
+                </li>
                 <li class="nav-item {{ Request::is('admin/report*') ? 'active' : '' }}">
                     <a href="{{ route('report.index') }}">
                         <span class="material-symbols-rounded">analytics</span>

@@ -28,36 +28,44 @@
         border-color: var(--secondary);
     }
     .results-grid {
-        column-count: 5;
+        column-count: 6;
         column-gap: 1.5rem;
         width: 100%;
+        max-width: 1500px;
+        margin: 0 auto;
     }
     .book-card {
-        break-inside: avoid;
-        margin-bottom: 2rem;
-        display: inline-flex !important;
-        flex-direction: column;
+        display: inline-block; /* Lebih stabil untuk column-layout */
         width: 100%;
+        margin-bottom: 2rem;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        break-inside: avoid;
+    }
+    .book-card:hover {
+        transform: translateY(-8px);
     }
     .book-cover {
-        aspect-ratio: auto !important;
-        height: auto !important;
-        background: transparent !important;
+        width: 100%;
+        max-height: 400px; /* Pengaman agar tidak terlalu panjang */
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        background: rgba(255,255,255,0.03);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        margin-bottom: 1rem;
     }
     .book-cover img {
         width: 100%;
-        height: auto;
-        object-fit: contain;
-        border-radius: var(--radius-md);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        height: 100%;
+        object-fit: cover; /* Memastikan area terisi rapi */
+        display: block;
     }
 
     /* Adaptive Grid */
-    @media (max-width: 1400px) { .results-grid { column-count: 5; } }
+    @media (max-width: 1600px) { .results-grid { column-count: 5; } }
     @media (max-width: 1200px) { .results-grid { column-count: 4; } }
     @media (max-width: 992px) { .results-grid { column-count: 3; } }
     @media (max-width: 768px) { .results-grid { column-count: 2; } }
-    @media (max-width: 480px) { .results-grid { column-count: 2; column-gap: 1rem; } }
+    @media (max-width: 480px) { .results-grid { column-count: 2; column-gap: 0.75rem; } }
 </style>
 @endsection
 

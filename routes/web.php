@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('admin')->prefix('admin')->group(function () {
         Route::resource('kategori', \App\Http\Controllers\KategoriController::class);
         Route::resource('buku', \App\Http\Controllers\BukuController::class);
+        Route::resource('member', \App\Http\Controllers\MemberController::class)->only(['index', 'destroy']);
         Route::get('/report', [\App\Http\Controllers\ReportController::class, 'index'])->name('report.index');
     });
 });

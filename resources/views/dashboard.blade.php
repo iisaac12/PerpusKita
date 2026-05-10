@@ -3,6 +3,54 @@
 @section('title', 'Dashboard - PerpusKita')
 @section('header_title', 'Halo, Selamat Pagi!')
 
+@section('styles')
+<style>
+    .books-scroll {
+        display: flex;
+        gap: 1.5rem;
+        overflow-x: auto;
+        padding: 0.5rem 0 1.5rem 0;
+        scrollbar-width: thin;
+        scrollbar-color: var(--glass-border) transparent;
+    }
+    .book-card-dashboard {
+        width: 160px;
+        flex-shrink: 0;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .book-card-dashboard:hover {
+        transform: translateY(-8px);
+    }
+    .book-cover-dashboard {
+        width: 100%;
+        aspect-ratio: 2/3;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        background: rgba(255,255,255,0.05);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        margin-bottom: 0.75rem;
+        position: relative;
+    }
+    .book-cover-dashboard img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .book-title-dashboard {
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .book-author-dashboard {
+        color: var(--text-muted);
+        font-size: 0.75rem;
+    }
+</style>
+@endsection
+
 @section('content')
 <section class="dashboard-grid">
     @if(Auth::user()->isAdmin())
@@ -100,21 +148,21 @@
 </section>
 
 <section class="recommendations-section">
-    <h3>Buku Terbaru</h3>
+    <h3 style="margin-bottom: 1.5rem;">Buku Terbaru</h3>
     <div class="books-scroll">
         @forelse($recent_books as $book)
-        <div class="book-card">
-            <div class="book-cover">
+        <div class="book-card-dashboard">
+            <div class="book-cover-dashboard">
                 @if($book->cover_buku)
                     <img src="{{ asset('storage/' . $book->cover_buku) }}" alt="{{ $book->judul }}">
                 @else
-                    <div style="width: 100%; height: 100%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center;">
-                        <span class="material-symbols-rounded" style="font-size: 48px; color: var(--glass-border);">book</span>
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <span class="material-symbols-rounded" style="font-size: 32px; color: var(--glass-border);">book</span>
                     </div>
                 @endif
             </div>
-            <p class="book-title">{{ $book->judul }}</p>
-            <p class="book-author">{{ $book->pengarang }}</p>
+            <p class="book-title-dashboard" title="{{ $book->judul }}">{{ $book->judul }}</p>
+            <p class="book-author-dashboard">{{ $book->pengarang }}</p>
         </div>
         @empty
         <p style="color: var(--text-muted);">Belum ada koleksi buku.</p>
