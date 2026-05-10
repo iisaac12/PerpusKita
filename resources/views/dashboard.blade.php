@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Dashboard - PerpusKita')
-@section('header_title', 'Halo, Selamat Pagi!')
 
 @section('styles')
 <style>

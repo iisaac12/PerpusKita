@@ -101,9 +101,21 @@
         <!-- Main Content -->
         <main class="main-content">
             <header>
+                @php
+                    $hour = now()->hour;
+                    if ($hour >= 5 && $hour < 11) {
+                        $greeting = 'Selamat Pagi';
+                    } elseif ($hour >= 11 && $hour < 15) {
+                        $greeting = 'Selamat Siang';
+                    } elseif ($hour >= 15 && $hour < 18) {
+                        $greeting = 'Selamat Sore';
+                    } else {
+                        $greeting = 'Selamat Malam';
+                    }
+                @endphp
                 <div class="welcome-text">
                     <p style="color: var(--text-muted);">Selamat Datang Kembali</p>
-                    <h2 style="font-size: 1.75rem;">@yield('header_title', 'Halo, Selamat Pagi!')</h2>
+                    <h2 style="font-size: 1.75rem;">@yield('header_title', 'Halo, ' . $greeting . '!')</h2>
                 </div>
                 
                 <div class="user-profile">
