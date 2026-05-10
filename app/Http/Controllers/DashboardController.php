@@ -34,7 +34,7 @@ class DashboardController extends Controller
             ];
         }
 
-        $recent_books = Buku::with('kategori')->latest()->take(5)->get();
+        $recent_books = Buku::with('categories')->latest()->take(5)->get();
 
         return view('dashboard', compact('stats', 'recent_books'));
     }

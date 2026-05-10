@@ -51,11 +51,28 @@ class Buku extends Model
     }
 
     /**
-     * Relasi: satu buku dimiliki satu kategori.
+     * Relasi: satu buku bisa memiliki banyak kategori.
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Kategori::class, 'buku_kategori', 'id_buku', 'id_kategori')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Accessor: Ambil kategori pertama (untuk kompatibilitas tampilan).
+     */
+    public function getKategoriAttribute()
+    {
+        return $this->categories->first();
+    }
+
+    /**
+     * Alias untuk relasi categories (untuk kompatibilitas query).
      */
     public function kategori()
     {
-        return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
+        return $this->categories();
     }
 
     /**

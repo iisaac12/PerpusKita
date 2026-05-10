@@ -49,9 +49,11 @@
                         </div>
                     </td>
                     <td style="padding: 1rem;">
-                        <span style="background: rgba(167, 139, 250, 0.1); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; border: 1px solid rgba(167, 139, 250, 0.2);">
-                            {{ $item->kategori->nama_kategori }}
+                        @foreach($item->categories as $kat)
+                        <span style="background: rgba(167, 139, 250, 0.1); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; border: 1px solid rgba(167, 139, 250, 0.2); margin-right: 0.25rem; display: inline-block; margin-bottom: 0.25rem;">
+                            {{ $kat->nama_kategori }}
                         </span>
+                        @endforeach
                     </td>
                     <td style="padding: 1rem;">
                         <div style="font-size: 0.875rem;">{{ $item->penerbit }}</div>

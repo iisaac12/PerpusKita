@@ -14,7 +14,7 @@ class BukuController extends Controller
      */
     public function index()
     {
-        $buku = Buku::with('kategori')->latest()->paginate(10);
+        $buku = Buku::with('categories')->latest()->paginate(10);
         return view('admin.buku.index', compact('buku'));
     }
 
@@ -33,7 +33,8 @@ class BukuController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_kategori' => 'required|exists:kategori,id_kategori',
+            'categories' => 'required|array|min:1', // Batas max:2 dihapus agar fleksibel
+            'categories.*' => 'exists:kategori,id_kategori',
             'judul' => 'required|string|max:255',
             'pengarang' => 'required|string|max:150',
             'penerbit' => 'required|string|max:150',
@@ -41,16 +42,20 @@ class BukuController extends Controller
             'cover_buku' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $data = $request->all();
+        $data = $request->except('categories');
+        // Set default id_kategori for old schema compatibility if needed, 
+        // or just leave it empty if column is nullable/removed
+        $data['id_kategori'] = $request->categories[0]; 
 
         if ($request->hasFile('cover_buku')) {
             $data['cover_buku'] = $request->file('cover_buku')->store('covers', 'public');
         }
 
-        Buku::create($data);
+        $buku = Buku::create($data);
+        $buku->categories()->sync($request->categories);
 
         return redirect()->route('buku.index')
-            ->with('success', 'Buku berhasil ditambahkan.');
+            ->with('success', 'Buku berhasil ditambahkan dengan ' . count($request->categories) . ' kategori.');
     }
 
     /**
@@ -68,7 +73,8 @@ class BukuController extends Controller
     public function update(Request $request, Buku $buku)
     {
         $request->validate([
-            'id_kategori' => 'required|exists:kategori,id_kategori',
+            'categories' => 'required|array|min:1', // Batas max:2 dihapus
+            'categories.*' => 'exists:kategori,id_kategori',
             'judul' => 'required|string|max:255',
             'pengarang' => 'required|string|max:150',
             'penerbit' => 'required|string|max:150',
@@ -76,7 +82,8 @@ class BukuController extends Controller
             'cover_buku' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $data = $request->all();
+        $data = $request->except('categories');
+        $data['id_kategori'] = $request->categories[0];
 
         if ($request->hasFile('cover_buku')) {
             // Delete old cover if exists
@@ -87,6 +94,11 @@ class BukuController extends Controller
         }
 
         $buku->update($data);
+        
+        // Sync kategori ulang
+        if ($request->has('categories')) {
+            $buku->categories()->sync($request->input('categories'));
+        }
 
         return redirect()->route('buku.index')
             ->with('success', 'Buku berhasil diperbarui.');

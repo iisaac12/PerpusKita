@@ -45,17 +45,22 @@
                         @error('judul') <p style="color: #f87171; font-size: 0.75rem; margin-top: 0.25rem;">{{ $message }}</p> @enderror
                     </div>
 
+                    @php
+                        $selectedCategories = $buku->categories->pluck('id_kategori')->toArray();
+                    @endphp
                     <div class="form-group">
-                        <label for="id_kategori">Kategori</label>
-                        <select name="id_kategori" id="id_kategori" class="form-control" required style="appearance: none;">
-                            <option value="">Pilih Kategori</option>
+                        <label>Pilih Kategori (Bisa pilih lebih dari satu)</label>
+                        <div style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 1rem; max-height: 200px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem;">
                             @foreach($kategori as $kat)
-                                <option value="{{ $kat->id_kategori }}" {{ old('id_kategori', $buku->id_kategori) == $kat->id_kategori ? 'selected' : '' }}>
-                                    {{ $kat->nama_kategori }}
-                                </option>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
+                                    <input type="checkbox" name="categories[]" value="{{ $kat->id_kategori }}" 
+                                           {{ in_array($kat->id_kategori, old('categories', $selectedCategories)) ? 'checked' : '' }}
+                                           style="width: 1.2rem; height: 1.2rem; accent-color: var(--primary); cursor: pointer;">
+                                    <span style="font-size: 0.875rem;">{{ $kat->nama_kategori }}</span>
+                                </label>
                             @endforeach
-                        </select>
-                        @error('id_kategori') <p style="color: #f87171; font-size: 0.75rem; margin-top: 0.25rem;">{{ $message }}</p> @enderror
+                        </div>
+                        @error('categories') <p style="color: #f87171; font-size: 0.75rem; margin-top: 0.25rem;">{{ $message }}</p> @enderror
                     </div>
 
                     <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
