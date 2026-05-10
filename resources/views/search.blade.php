@@ -28,10 +28,36 @@
         border-color: var(--secondary);
     }
     .results-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 2rem;
+        column-count: 5;
+        column-gap: 1.5rem;
+        width: 100%;
     }
+    .book-card {
+        break-inside: avoid;
+        margin-bottom: 2rem;
+        display: inline-flex !important;
+        flex-direction: column;
+        width: 100%;
+    }
+    .book-cover {
+        aspect-ratio: auto !important;
+        height: auto !important;
+        background: transparent !important;
+    }
+    .book-cover img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        border-radius: var(--radius-md);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Adaptive Grid */
+    @media (max-width: 1400px) { .results-grid { column-count: 5; } }
+    @media (max-width: 1200px) { .results-grid { column-count: 4; } }
+    @media (max-width: 992px) { .results-grid { column-count: 3; } }
+    @media (max-width: 768px) { .results-grid { column-count: 2; } }
+    @media (max-width: 480px) { .results-grid { column-count: 2; column-gap: 1rem; } }
 </style>
 @endsection
 
