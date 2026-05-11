@@ -94,11 +94,7 @@ class BukuController extends Controller
         }
 
         $buku->update($data);
-        
-        // Sync kategori ulang
-        if ($request->has('categories')) {
-            $buku->categories()->sync($request->input('categories'));
-        }
+        $buku->categories()->sync($request->categories);
 
         return redirect()->route('buku.index')
             ->with('success', 'Buku berhasil diperbarui.');
