@@ -16,10 +16,10 @@
         </a>
     </div>
 
-    <div style="overflow-x: auto;">
+    <div style="max-height: 500px; overflow-y: auto; overflow-x: auto; padding-right: 0.5rem; scrollbar-width: thin; scrollbar-color: var(--glass-border) transparent;">
         <table style="width: 100%; border-collapse: collapse; color: var(--text-main);">
-            <thead>
-                <tr style="border-bottom: 1px solid var(--glass-border); text-align: left;">
+            <thead style="position: sticky; top: 0; background: #1a1625; z-index: 10; box-shadow: 0 1px 0 var(--glass-border);">
+                <tr style="text-align: left;">
                     <th style="padding: 1rem; color: var(--text-muted); font-weight: 500;">ID</th>
                     <th style="padding: 1rem; color: var(--text-muted); font-weight: 500;">Nama Kategori</th>
                     <th style="padding: 1rem; color: var(--text-muted); font-weight: 500;">Deskripsi</th>
