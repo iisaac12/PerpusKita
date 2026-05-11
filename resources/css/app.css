@@ -492,3 +492,95 @@ header {
     }
     .modal-book-cover { width: 180px; margin: 0 auto; height: 280px !important; }
 }
+
+/* Modern Glassmorphism Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    list-style: none;
+    margin-top: 2rem;
+}
+
+.pagination li a, 
+.pagination li span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 10px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.pagination li.active span {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--bg-color);
+    box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.pagination li a:hover {
+    background: var(--glass-border);
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+.pagination li.disabled span {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Menangani teks standard Laravel (Prev/Next) agar lebih clean */
+.pagination li:first-child a, 
+.pagination li:last-child a {
+    padding: 0 1.5rem;
+    border-radius: 15px;
+}
+
+/* Override Bootstrap Pagination for Glassmorphism */
+.pagination-container .pagination {
+    background: transparent;
+    border: none;
+    gap: 8px;
+}
+
+.pagination-container .page-item {
+    border: none;
+}
+
+.pagination-container .page-link {
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    color: var(--text-muted) !important;
+    border-radius: 12px !important;
+    padding: 10px 18px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: none;
+}
+
+.pagination-container .page-item.active .page-link {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: var(--bg-color) !important;
+    box-shadow: 0 0 15px var(--primary-glow) !important;
+}
+
+.pagination-container .page-link:hover {
+    background: var(--glass-border) !important;
+    color: #fff !important;
+    transform: translateY(-3px);
+}
+
+.pagination-container .page-item.disabled .page-link {
+    opacity: 0.3;
+    background: transparent !important;
+}

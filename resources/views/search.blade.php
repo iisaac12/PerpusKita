@@ -118,7 +118,7 @@
     @endforelse
 </section>
 
-<div style="margin-top: 3rem;">
-    {{ $buku->appends(request()->query())->links() }}
+<div class="pagination-container" style="margin-top: 3rem; display: flex; justify-content: center;">
+    {{ $buku->appends(request()->query())->links('pagination::bootstrap-4') }}
 </div>
 @endsection

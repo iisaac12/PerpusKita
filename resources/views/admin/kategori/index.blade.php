@@ -87,8 +87,8 @@
         </table>
     </div>
 
-    <div style="margin-top: 2rem;">
-        {{ $kategori->links() }}
+    <div class="pagination-container" style="margin-top: 2rem; display: flex; justify-content: center;">
+        {{ $kategori->appends(request()->query())->links('pagination::bootstrap-4') }}
     </div>
 </div>
 @endsection
