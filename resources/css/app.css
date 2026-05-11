@@ -65,11 +65,26 @@ body::before {
     padding: 2rem 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 2rem; /* Mengurangi gap sedikit agar lebih muat banyak */
     position: fixed;
     height: 100vh;
     z-index: 100;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Scrollable Sidebar */
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--glass-border) transparent;
+}
+
+/* Custom Scrollbar untuk Chrome/Edge/Safari */
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 10px;
 }
 
 .brand {
@@ -103,6 +118,23 @@ body::before {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    flex: 1; /* Mengambil sisa ruang yang ada */
+    overflow-y: auto; /* Menu bisa di-scroll */
+    padding-right: 8px;
+    margin-right: -8px; /* Offset agar scrollbar tidak menempel ke teks */
+    
+    /* Custom Scrollbar Tipis */
+    scrollbar-width: thin;
+    scrollbar-color: var(--glass-border) transparent;
+}
+
+.nav-menu::-webkit-scrollbar {
+    width: 4px;
+}
+
+.nav-menu::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 10px;
 }
 
 .nav-item a {
