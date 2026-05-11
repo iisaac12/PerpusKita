@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
             
-            const maxTilt = 5; // Batasan kemiringan maksimum (derajat)
-            const intensity = 80; // Semakin besar angka ini, semakin halus gerakannya
+            const maxTilt = 1.5; // Batasan kemiringan maksimum (derajat)
+            const intensity = 150; // Semakin besar angka ini, semakin halus gerakannya
             
             let rotateX = (y - centerY) / intensity;
             let rotateY = (centerX - x) / intensity;
