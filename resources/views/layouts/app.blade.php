@@ -144,6 +144,123 @@
         @csrf
     </form>
 
+    <!-- Global Book Detail Modal -->
+    <div id="bookModal" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="material-symbols-rounded close-modal" onclick="closeModal()">close</span>
+            <div class="modal-left">
+                <div class="book-cover modal-book-cover" id="modalCover" style="height: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+                    <!-- Cover Image via JS -->
+                </div>
+            </div>
+            <div class="modal-right" style="display: flex; flex-direction: column; gap: 1rem;">
+                <h2 id="modalTitle" style="font-size: 2rem; font-weight: 700; color: #fff;"></h2>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="modalCategories">
+                    <!-- Categories via JS -->
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 100px 1fr; gap: 0.5rem; font-size: 0.9rem; margin-top: 1rem;">
+                    <span style="color: var(--text-muted);">Penulis</span>
+                    <span id="modalAuthor" style="color: #fff; font-weight: 500;"></span>
+                    
+                    <span style="color: var(--text-muted);">Penerbit</span>
+                    <span id="modalPublisher" style="color: #fff; font-weight: 500;"></span>
+                    
+                    <span style="color: var(--text-muted);">Status</span>
+                    <span id="modalStatus"></span>
+                </div>
+
+                <hr style="border: none; border-top: 1px solid var(--glass-border); margin: 1rem 0;">
+                
+                <div style="flex: 1;">
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.5rem;">Sinopsis</p>
+                    <p id="modalDescription" style="line-height: 1.6; color: var(--text-main); font-size: 0.95rem;"></p>
+                </div>
+
+                <div id="modalAction" style="margin-top: 2rem;">
+                    <!-- Action Button via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showBookDetail(id) {
+            const modal = document.getElementById('bookModal');
+            
+            // Reset modal content
+            document.getElementById('modalTitle').innerText = 'Memuat...';
+            document.getElementById('modalDescription').innerText = '';
+            document.getElementById('modalCategories').innerHTML = '';
+            document.getElementById('modalCover').innerHTML = '';
+            document.getElementById('modalAuthor').innerText = '';
+            document.getElementById('modalPublisher').innerText = '';
+            document.getElementById('modalStatus').innerHTML = '';
+            document.getElementById('modalAction').innerHTML = '';
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            fetch(`/api/buku/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        const buku = data.data;
+                        document.getElementById('modalTitle').innerText = buku.judul;
+                        document.getElementById('modalAuthor').innerText = buku.pengarang;
+                        document.getElementById('modalPublisher').innerText = buku.penerbit;
+                        document.getElementById('modalDescription').innerText = buku.deskripsi || 'Tidak ada sinopsis untuk buku ini.';
+                        
+                        const coverContainer = document.getElementById('modalCover');
+                        if(buku.cover_buku) {
+                            coverContainer.innerHTML = `<img src="/storage/${buku.cover_buku}" alt="${buku.judul}" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-md);">`;
+                        } else {
+                            coverContainer.innerHTML = `<div style="width: 100%; height: 100%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center;"><span class="material-symbols-rounded" style="font-size: 64px; color: var(--glass-border);">book</span></div>`;
+                        }
+
+                        const catContainer = document.getElementById('modalCategories');
+                        if(buku.categories) {
+                            buku.categories.forEach(cat => {
+                                const badge = document.createElement('span');
+                                badge.className = 'filter-chip active';
+                                badge.style.fontSize = '0.7rem';
+                                badge.style.padding = '0.25rem 0.75rem';
+                                badge.style.background = 'var(--secondary-glow)';
+                                badge.style.color = 'var(--secondary)';
+                                badge.style.border = '1px solid var(--secondary)';
+                                badge.style.borderRadius = '50px';
+                                badge.innerText = cat.nama_kategori;
+                                catContainer.appendChild(badge);
+                            });
+                        }
+
+                        const statusEl = document.getElementById('modalStatus');
+                        if(buku.stok > 0) {
+                            statusEl.innerHTML = `<span style="color: #4ade80;">Tersedia (${buku.stok})</span>`;
+                            @if(Auth::check() && !Auth::user()->isAdmin())
+                                document.getElementById('modalAction').innerHTML = `
+                                    <a href="/borrowing/create?buku_id=${buku.id_buku}" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">
+                                        Pinjam Buku Sekarang
+                                    </a>
+                                `;
+                            @endif
+                        } else {
+                            statusEl.innerHTML = `<span style="color: #f87171;">Stok Habis</span>`;
+                        }
+                    }
+                });
+        }
+
+        function closeModal(e) {
+            document.getElementById('bookModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'Escape') closeModal();
+        });
+    </script>
+
     @yield('scripts')
 </body>
 </html>

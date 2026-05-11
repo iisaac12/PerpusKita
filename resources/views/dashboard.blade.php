@@ -150,7 +150,7 @@
     <h3 style="margin-bottom: 1.5rem;">Buku Terbaru</h3>
     <div class="books-scroll">
         @forelse($recent_books as $book)
-        <div class="book-card-dashboard">
+        <div class="book-card-dashboard" style="cursor: pointer;" onclick="showBookDetail('{{ $book->id_buku }}')">
             <div class="book-cover-dashboard">
                 @if($book->cover_buku)
                     <img src="{{ asset('storage/' . $book->cover_buku) }}" alt="{{ $book->judul }}">
