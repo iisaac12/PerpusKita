@@ -33,11 +33,12 @@ class BukuController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'categories' => 'required|array|min:1', // Batas max:2 dihapus agar fleksibel
+            'categories' => 'required|array|min:1', 
             'categories.*' => 'exists:kategori,id_kategori',
             'judul' => 'required|string|max:255',
             'pengarang' => 'required|string|max:150',
             'penerbit' => 'required|string|max:150',
+            'deskripsi' => 'nullable|string',
             'stok' => 'required|integer|min:0',
             'cover_buku' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -73,11 +74,12 @@ class BukuController extends Controller
     public function update(Request $request, Buku $buku)
     {
         $request->validate([
-            'categories' => 'required|array|min:1', // Batas max:2 dihapus
+            'categories' => 'required|array|min:1', 
             'categories.*' => 'exists:kategori,id_kategori',
             'judul' => 'required|string|max:255',
             'pengarang' => 'required|string|max:150',
             'penerbit' => 'required|string|max:150',
+            'deskripsi' => 'nullable|string',
             'stok' => 'required|integer|min:0',
             'cover_buku' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);

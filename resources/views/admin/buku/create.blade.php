@@ -67,6 +67,12 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="deskripsi">Sinopsis / Deskripsi Buku</label>
+                        <textarea name="deskripsi" id="deskripsi" class="form-control" rows="4" placeholder="Tuliskan sedikit tentang isi buku ini..." style="resize: vertical;">{{ old('deskripsi') }}</textarea>
+                        @error('deskripsi') <p style="color: #f87171; font-size: 0.75rem; margin-top: 0.25rem;">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="form-group">
                         <label for="stok">Stok Buku</label>
                         <input type="number" name="stok" id="stok" class="form-control" placeholder="0" min="0" required value="{{ old('stok', 0) }}">
                         @error('stok') <p style="color: #f87171; font-size: 0.75rem; margin-top: 0.25rem;">{{ $message }}</p> @enderror
