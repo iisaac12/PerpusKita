@@ -8,7 +8,7 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
         <div>
             <h3 style="font-size: 1.25rem; font-weight: 600;">{{ Auth::user()->isAdmin() ? 'Semua Peminjaman' : 'Peminjaman Saya' }}</h3>
-            <p style="color: var(--text-muted); font-size: 0.875rem;">Pantau status dan tenggat waktu pengembalian buku</p>
+            <p style="color: var(--text-muted); font-size: 0.875rem;">{{ Auth::user()->isAdmin() ? 'Kelola dan pantau seluruh transaksi buku' : 'Pantau status dan tenggat waktu pengembalian buku' }}</p>
         </div>
         @if(!Auth::user()->isAdmin())
         <a href="{{ route('borrowing.create') }}" class="btn btn-primary">
@@ -17,6 +17,40 @@
         </a>
         @endif
     </div>
+
+    <!-- Filter & Search -->
+    <form action="{{ route('borrowing') }}" method="GET" style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; align-items: center;">
+        @if(Auth::user()->isAdmin())
+        <div style="flex: 1; min-width: 250px; position: relative;">
+            <span class="material-symbols-rounded" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.2rem;">search</span>
+            <input type="text" name="search" class="form-control" placeholder="Cari nama member, buku, atau ID..." value="{{ request('search') }}" style="padding-left: 3rem;">
+        </div>
+        @endif
+        
+        <div style="width: 180px;">
+            <select name="status" class="form-control" onchange="this.form.submit()">
+                <option value="all">Semua Status</option>
+                <option value="menunggu" {{ request('status') == 'menunggu' ? 'selected' : '' }}>Menunggu Verifikasi</option>
+                <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Sedang Dipinjam</option>
+                <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai Kembali</option>
+                <option value="dibatalkan" {{ request('status') == 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
+            </select>
+        </div>
+
+        <div style="width: 160px;">
+            <select name="sort" class="form-control" onchange="this.form.submit()">
+                <option value="created_at" {{ request('sort', 'created_at') == 'created_at' ? 'selected' : '' }}>Tgl Pengajuan</option>
+                <option value="tanggal_pinjam" {{ request('sort') == 'tanggal_pinjam' ? 'selected' : '' }}>Tgl Pinjam</option>
+                <option value="tanggal_kembali" {{ request('sort') == 'tanggal_kembali' ? 'selected' : '' }}>Tgl Kembali</option>
+            </select>
+        </div>
+
+        @if(request()->anyFilled(['search', 'status', 'sort']))
+            <a href="{{ route('borrowing') }}" class="btn btn-glass" style="color: #f87171; border-color: rgba(248, 113, 113, 0.2);">
+                <span class="material-symbols-rounded" style="font-size: 1.2rem;">restart_alt</span>
+            </a>
+        @endif
+    </form>
 
     <div style="overflow-x: auto;">
         <table style="width: 100%; border-collapse: collapse; color: var(--text-main);">

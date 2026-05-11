@@ -10,9 +10,21 @@ class KategoriController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kategori = Kategori::latest()->paginate(10);
+        $query = Kategori::query();
+
+        // Search
+        if ($request->filled('search')) {
+            $query->where('nama_kategori', 'like', '%' . $request->search . '%');
+        }
+
+        // Sort
+        $sort = $request->get('sort', 'created_at');
+        $order = $request->get('order', 'desc');
+        $query->orderBy($sort, $order);
+
+        $kategori = $query->paginate(10)->withQueryString();
         return view('admin.kategori.index', compact('kategori'));
     }
 

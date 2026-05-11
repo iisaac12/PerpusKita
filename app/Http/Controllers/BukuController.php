@@ -12,10 +12,39 @@ class BukuController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $buku = Buku::with('categories')->latest()->paginate(10);
-        return view('admin.buku.index', compact('buku'));
+        $query = Buku::with('categories');
+
+        // Search (Judul, Pengarang, ID)
+        if ($request->filled('search')) {
+            $query->where(function($q) use ($request) {
+                $q->where('judul', 'like', '%' . $request->search . '%')
+                  ->orWhere('pengarang', 'like', '%' . $request->search . '%')
+                  ->orWhere('id_buku', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Filter Category
+        if ($request->filled('category') && $request->category != 'all') {
+            $query->whereHas('categories', function($q) use ($request) {
+                $q->where('kategori.id_kategori', $request->category);
+            });
+        }
+
+        // Sort
+        $sort = $request->get('sort', 'created_at');
+        $order = $request->get('order', 'desc');
+        
+        $allowedSorts = ['judul', 'pengarang', 'stok', 'created_at'];
+        if (in_array($sort, $allowedSorts)) {
+            $query->orderBy($sort, $order);
+        }
+
+        $buku = $query->paginate(10)->withQueryString();
+        $categories = Kategori::all();
+        
+        return view('admin.buku.index', compact('buku', 'categories'));
     }
 
     /**
