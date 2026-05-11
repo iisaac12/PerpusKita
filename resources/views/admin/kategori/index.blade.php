@@ -61,7 +61,7 @@
     </div>
 
     <div style="margin-top: 2rem;">
-        {{ $kategori->links() }}
+        {{ $kategori->links('vendor.pagination.custom') }}
     </div>
 </div>
 @endsection

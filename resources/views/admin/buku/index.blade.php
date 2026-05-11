@@ -90,7 +90,7 @@
     </div>
 
     <div style="margin-top: 2rem;">
-        {{ $buku->links() }}
+        {{ $buku->links('vendor.pagination.custom') }}
     </div>
 </div>
 @endsection
