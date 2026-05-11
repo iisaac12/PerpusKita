@@ -18,16 +18,15 @@
                 <!-- Cover Upload Part -->
                 <div>
                     <label style="display: block; margin-bottom: 1rem; color: var(--text-muted);">Cover Buku</label>
-                    <div id="cover-preview" style="width: 100%; aspect-ratio: 2/3; background: rgba(255,255,255,0.05); border: 2px dashed var(--glass-border); border-radius: var(--radius-md); display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; position: relative; overflow: hidden;" onclick="document.getElementById('cover_buku').click()">
-                        @if($buku->cover_buku)
-                            <img id="preview-img" src="{{ asset('storage/' . $buku->cover_buku) }}" alt="Preview" style="display: block; position: absolute; width: 100%; height: 100%; object-fit: cover;">
-                        @else
+                    <div id="drop-zone" style="width: 100%; aspect-ratio: 2/3; background: rgba(255,255,255,0.05); border: 2px dashed var(--glass-border); border-radius: var(--radius-md); display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; position: relative; overflow: hidden; transition: all 0.3s ease;">
+                        <div id="drop-zone-content" style="text-align: center; pointer-events: none; {{ $buku->cover_buku ? 'display: none;' : '' }}">
                             <span class="material-symbols-rounded" style="font-size: 3rem; margin-bottom: 0.5rem;">add_photo_alternate</span>
-                            <span style="font-size: 0.75rem;">Ubah File Cover</span>
-                            <img id="preview-img" src="#" alt="Preview" style="display: none; position: absolute; width: 100%; height: 100%; object-fit: cover;">
-                        @endif
+                            <p style="font-size: 0.85rem; margin-bottom: 0.25rem;">Klik atau Tarik Gambar</p>
+                            <p style="font-size: 0.7rem;">(JPG, JPEG, PNG)</p>
+                        </div>
+                        <img id="preview-img" src="{{ $buku->cover_buku ? asset('storage/' . $buku->cover_buku) : '#' }}" alt="Preview" style="{{ $buku->cover_buku ? 'display: block;' : 'display: none;' }} position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: 10;">
                     </div>
-                    <input type="file" name="cover_buku" id="cover_buku" style="display: none;" accept="image/*" onchange="previewImage(this)">
+                    <input type="file" name="cover_buku" id="cover_buku" style="display: none;" accept=".jpg,.jpeg,.png" onchange="handleFiles(this.files)">
                     <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.75rem;">* Kosongkan jika tidak ingin mengubah cover</p>
                     @error('cover_buku') <p style="color: #f87171; font-size: 0.75rem; margin-top: 0.25rem;">{{ $message }}</p> @enderror
                 </div>
@@ -97,15 +96,66 @@
 
 @section('scripts')
 <script>
-    function previewImage(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('cover_buku');
+    const previewImg = document.getElementById('preview-img');
+    const dropContent = document.getElementById('drop-zone-content');
+
+    // Klik untuk pilih file
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    // Highlight saat file ditarik ke atas drop zone
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropZone.style.background = 'rgba(255,255,255,0.1)';
+            dropZone.style.borderColor = 'var(--primary)';
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropZone.style.background = 'rgba(255,255,255,0.05)';
+            dropZone.style.borderColor = 'var(--glass-border)';
+        }, false);
+    });
+
+    // Handle file drop
+    dropZone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+    });
+
+    function handleFiles(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+
+            if (!validTypes.includes(file.type)) {
+                alert('Format file tidak didukung! Gunakan JPG, JPEG, atau PNG.');
+                return;
+            }
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Ukuran file terlalu besar! Maksimal 2MB.');
+                return;
+            }
+
+            // Set file ke input agar bisa diproses PHP
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+
+            // Preview gambar
+            const reader = new FileReader();
             reader.onload = function(e) {
-                var previewImg = document.getElementById('preview-img');
                 previewImg.src = e.target.result;
                 previewImg.style.display = 'block';
+                if (dropContent) dropContent.style.display = 'none';
             }
-            reader.readAsDataURL(input.files[0]);
+            reader.readAsDataURL(file);
         }
     }
 </script>
