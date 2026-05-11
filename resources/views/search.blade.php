@@ -7,10 +7,9 @@
 <style>
     .filter-section {
         display: flex;
-        gap: 1rem;
+        flex-wrap: wrap;
+        gap: 0.75rem;
         margin-bottom: 2rem;
-        overflow-x: auto;
-        padding-bottom: 0.5rem;
     }
     .filter-chip {
         padding: 0.5rem 1.25rem;

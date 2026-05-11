@@ -232,7 +232,7 @@ header {
 
 .btn-primary:hover {
     background: #c4b5fd;
-    transform: scale(1.02);
+    box-shadow: 0 6px 20px var(--primary-glow);
 }
 
 .btn-glass {
