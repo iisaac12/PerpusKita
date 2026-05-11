@@ -37,11 +37,12 @@
         display: inline-block;
         width: 100%;
         margin-bottom: 2rem;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
         break-inside: avoid;
     }
     .book-card:hover {
-        transform: translateY(-8px);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
     }
     .book-cover {
         width: 100%;

@@ -15,10 +15,11 @@
     .book-card-dashboard {
         width: 160px;
         flex-shrink: 0;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
     .book-card-dashboard:hover {
-        transform: translateY(-8px);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
     }
     .book-cover-dashboard {
         width: 100%;
