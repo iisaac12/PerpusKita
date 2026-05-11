@@ -12,6 +12,31 @@
         </div>
     </div>
 
+    <!-- Filter & Search -->
+    <form action="{{ route('member.index') }}" method="GET" style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; align-items: center;">
+        <div style="flex: 1; min-width: 250px; position: relative;">
+            <span class="material-symbols-rounded" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.2rem;">search</span>
+            <input type="text" name="search" class="form-control" placeholder="Cari nama, email, atau ID..." value="{{ request('search') }}" style="padding-left: 3rem;">
+        </div>
+        <div style="width: 180px;">
+            <select name="sort" class="form-control" onchange="this.form.submit()">
+                <option value="nama" {{ request('sort') == 'nama' ? 'selected' : '' }}>Urut Nama (A-Z)</option>
+                <option value="created_at" {{ request('sort', 'created_at') == 'created_at' ? 'selected' : '' }}>Member Terbaru</option>
+            </select>
+        </div>
+        <div style="width: 120px;">
+            <select name="order" class="form-control" onchange="this.form.submit()">
+                <option value="asc" {{ request('order') == 'asc' ? 'selected' : '' }}>Ascending</option>
+                <option value="desc" {{ request('order') == 'desc' ? 'selected' : '' }}>Descending</option>
+            </select>
+        </div>
+        @if(request()->anyFilled(['search', 'sort', 'order']))
+            <a href="{{ route('member.index') }}" class="btn btn-glass" style="color: #f87171; border-color: rgba(248, 113, 113, 0.2);">
+                <span class="material-symbols-rounded" style="font-size: 1.2rem;">restart_alt</span>
+            </a>
+        @endif
+    </form>
+
     <div style="overflow-x: auto;">
         <table style="width: 100%; border-collapse: collapse; color: var(--text-main);">
             <thead>

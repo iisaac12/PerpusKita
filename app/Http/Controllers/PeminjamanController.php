@@ -14,22 +14,43 @@ class PeminjamanController extends Controller
     /**
      * Display a listing of borrowings.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $query = Peminjaman::with(['peminjam', 'buku']);
         
         if ($user->isAdmin()) {
-            $peminjaman = Peminjaman::with(['peminjam', 'buku'])
-                ->whereNotIn('status', ['selesai', 'dibatalkan'])
-                ->latest()
-                ->paginate(10);
+            // Search (Nama Member, Judul Buku, ID)
+            if ($request->filled('search')) {
+                $query->where(function($q) use ($request) {
+                    $q->whereHas('peminjam', function($sq) use ($request) {
+                        $sq->where('nama', 'like', '%' . $request->search . '%');
+                    })->orWhereHas('buku', function($sq) use ($request) {
+                        $sq->where('judul', 'like', '%' . $request->search . '%');
+                    })->orWhere('id_peminjaman', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            // Filter Status
+            if ($request->filled('status') && $request->status != 'all') {
+                $query->where('status', $request->status);
+            }
         } else {
-            $peminjaman = Peminjaman::with('buku')
-                ->where('id_peminjam', $user->id_peminjam)
-                ->whereNotIn('status', ['selesai', 'dibatalkan'])
-                ->latest()
-                ->paginate(10);
+            $query->where('id_peminjam', $user->id_peminjam);
+            // Default user view (hanya yang aktif/menunggu)
+            if (!$request->has('status')) {
+                $query->whereNotIn('status', ['selesai', 'dibatalkan']);
+            } elseif ($request->status != 'all') {
+                $query->where('status', $request->status);
+            }
         }
+
+        // Sort
+        $sort = $request->get('sort', 'created_at');
+        $order = $request->get('order', 'desc');
+        $query->orderBy($sort, $order);
+
+        $peminjaman = $query->paginate(10)->withQueryString();
 
         return view('peminjaman.index', compact('peminjaman'));
     }
