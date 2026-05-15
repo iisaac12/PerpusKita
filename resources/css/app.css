@@ -444,8 +444,8 @@ header {
     .main-content {
         margin-left: 0;
         width: 100%;
-        padding: 1.5rem;
-        padding-bottom: 5rem;
+        padding: 1rem; /* More compact padding for mobile */
+        padding-bottom: 80px; /* Space for bottom bar */
     }
     header {
         flex-direction: column;
@@ -454,6 +454,37 @@ header {
     }
     .dashboard-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    /* Option B: One card per row on mobile */
+    .books-scroll {
+        flex-direction: column;
+        gap: 1.5rem;
+        overflow-x: visible;
+        padding: 0;
+    }
+    .book-card {
+        min-width: 100%;
+        width: 100%;
+    }
+    .book-cover {
+        aspect-ratio: 16/9; /* Slightly wider cover for vertical list feel */
+        height: 200px;
+    }
+
+    /* Modal Optimization */
+    .modal-content {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+        gap: 1.5rem;
+        width: 95%;
+        margin: 10px;
+    }
+    .modal-left .book-cover {
+        height: 250px !important;
+        width: 160px;
+        margin: 0 auto;
     }
 }
 
