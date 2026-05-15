@@ -50,7 +50,7 @@
                 </li>
 
                 @if(Auth::user()->isAdmin())
-                <div style="padding: 1rem 1rem 0.5rem; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Admin Tools</div>
+                <div class="nav-category" style="padding: 1rem 1rem 0.5rem; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Admin Tools</div>
                 <li class="nav-item {{ Request::is('admin/kategori*') ? 'active' : '' }}">
                     <a href="{{ route('kategori.index') }}">
                         <span class="material-symbols-rounded">category</span>

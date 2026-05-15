@@ -402,25 +402,45 @@ header {
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
-        height: auto;
+        height: 70px; /* Fixed height for bottom bar */
         bottom: 0;
         top: auto;
-        padding: 0.5rem;
+        padding: 0 1rem;
         flex-direction: row;
-        justify-content: space-around;
+        align-items: center;
         border-right: none;
         border-top: 1px solid var(--glass-border);
+        overflow: hidden;
     }
-    .brand { display: none; }
+    .brand, .nav-category { display: none; }
+    
     .nav-menu {
         flex-direction: row;
         width: 100%;
-        justify-content: space-around;
+        justify-content: space-between;
+        align-items: center;
         gap: 0;
+        overflow: hidden;
+        padding: 0;
+        margin: 0;
+    }
+    .nav-item {
+        margin-top: 0 !important; /* Reset margin-top auto dari logout */
+        flex: 1;
+        display: flex;
+        justify-content: center;
     }
     .nav-item a {
-        padding: 0.75rem;
+        padding: 0.6rem;
+        width: 44px;
+        height: 44px;
+        justify-content: center;
+        border-radius: 12px;
     }
+    .nav-item.active a {
+        box-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
+    }
+}
     .main-content {
         margin-left: 0;
         width: 100%;
