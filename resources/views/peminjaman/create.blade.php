@@ -29,6 +29,26 @@
                         <p style="font-family: monospace; font-weight: 600;">{{ Auth::user()->id_peminjam }}</p>
                     </div>
                 </div>
+                
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(167, 139, 250, 0.1); display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span class="material-symbols-rounded" style="color: {{ $currentBorrowedCount >= 10 ? '#f87171' : '#60a5fa' }}; font-size: 1.25rem;">
+                            {{ $currentBorrowedCount >= 10 ? 'error' : 'analytics' }}
+                        </span>
+                        <p style="font-size: 0.875rem;">
+                            Status Kuota: <strong>{{ $currentBorrowedCount }} / 10</strong> Buku dipinjam
+                        </p>
+                    </div>
+                    @if($currentBorrowedCount >= 10)
+                        <span style="background: rgba(248, 113, 113, 0.1); color: #f87171; padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(248, 113, 113, 0.2);">
+                            Kuota Penuh
+                        </span>
+                    @else
+                        <span style="background: rgba(96, 165, 250, 0.1); color: #60a5fa; padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(96, 165, 250, 0.2);">
+                            Sisa: {{ 10 - $currentBorrowedCount }} Buku
+                        </span>
+                    @endif
+                </div>
             </div>
 
             <div class="form-group">
@@ -68,12 +88,23 @@
                 </p>
             </div>
 
-            <div style="margin-top: 2.5rem; display: flex; gap: 1rem;">
-                <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center; height: 50px;">
-                    <span class="material-symbols-rounded">bookmark_add</span>
-                    Konfirmasi Pinjam
-                </button>
-                <button type="reset" class="btn btn-glass" style="padding: 0 2rem;">Reset</button>
+            <div style="margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                @if($currentBorrowedCount >= 10)
+                    <div style="background: rgba(248, 113, 113, 0.1); color: #f87171; padding: 1rem; border-radius: var(--radius-sm); border: 1px solid rgba(248, 113, 113, 0.2); display: flex; align-items: flex-start; gap: 0.75rem;">
+                        <span class="material-symbols-rounded" style="font-size: 1.25rem;">warning</span>
+                        <p style="font-size: 0.875rem;">
+                            <strong>Batas Tercapai:</strong> Anda sudah meminjam 10 buku aktif. Mohon selesaikan peminjaman sebelumnya atau hubungi petugas jika ada kendala.
+                        </p>
+                    </div>
+                @endif
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center; height: 50px;" {{ $currentBorrowedCount >= 10 ? 'disabled' : '' }}>
+                        <span class="material-symbols-rounded">bookmark_add</span>
+                        {{ $currentBorrowedCount >= 10 ? 'Kuota Penuh' : 'Konfirmasi Pinjam' }}
+                    </button>
+                    <button type="reset" class="btn btn-glass" style="padding: 0 2rem;">Reset</button>
+                </div>
             </div>
         </form>
     </div>
