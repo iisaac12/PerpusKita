@@ -66,7 +66,14 @@ class PeminjamanController extends Controller
         }
         
         $buku_list = Buku::where('stok', '>', 0)->get();
-        return view('peminjaman.create', compact('buku_list', 'selected_buku'));
+
+        // Calculate current borrowed count for the logged-in user
+        $currentBorrowedCount = Peminjaman::where('id_peminjam', Auth::user()->id_peminjam)
+            ->whereIn('status', ['menunggu', 'aktif'])
+            ->join('detail_peminjaman', 'peminjaman.id_peminjaman', '=', 'detail_peminjaman.id_peminjaman')
+            ->sum('detail_peminjaman.jumlah');
+
+        return view('peminjaman.create', compact('buku_list', 'selected_buku', 'currentBorrowedCount'));
     }
 
     /**
@@ -84,6 +91,16 @@ class PeminjamanController extends Controller
         
         if ($buku->stok <= 0) {
             return back()->with('error', 'Stok buku habis.');
+        }
+
+        // Validate max 10 books limit (SR-30 & SR-40)
+        $currentBorrowedCount = Peminjaman::where('id_peminjam', Auth::user()->id_peminjam)
+            ->whereIn('status', ['menunggu', 'aktif'])
+            ->join('detail_peminjaman', 'peminjaman.id_peminjaman', '=', 'detail_peminjaman.id_peminjaman')
+            ->sum('detail_peminjaman.jumlah');
+
+        if (($currentBorrowedCount + 1) > 10) {
+            return back()->with('error', 'Jumlah buku yang dipinjam melebihi batas maksimal 10 buku.');
         }
 
         DB::beginTransaction();
@@ -130,6 +147,18 @@ class PeminjamanController extends Controller
         try {
             // Logic for stock management
             if ($old_status != 'aktif' && $new_status == 'aktif') {
+                // Validate max 10 books limit before activating (SR-40)
+                $userBorrowedCount = Peminjaman::where('id_peminjam', $peminjaman->id_peminjam)
+                    ->where('status', 'aktif')
+                    ->join('detail_peminjaman', 'peminjaman.id_peminjaman', '=', 'detail_peminjaman.id_peminjaman')
+                    ->sum('detail_peminjaman.jumlah');
+                
+                $requestItemsCount = $peminjaman->detailPeminjaman->sum('jumlah');
+
+                if (($userBorrowedCount + $requestItemsCount) > 10) {
+                    throw new \Exception("Gagal: Member ini sudah meminjam 10 buku aktif.");
+                }
+
                 // Deduct stock when borrowing starts
                 foreach ($peminjaman->detailPeminjaman as $detail) {
                     $buku = $detail->buku;
