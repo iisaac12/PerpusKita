@@ -130,8 +130,8 @@
         </table>
     </div>
 
-    <div style="margin-top: 2rem;">
-        {{ $peminjaman->links() }}
+    <div class="pagination-container" style="margin-top: 2rem; display: flex; justify-content: center;">
+        {{ $peminjaman->appends(request()->query())->links('pagination::bootstrap-4') }}
     </div>
 </div>
 @endsection

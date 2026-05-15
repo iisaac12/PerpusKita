@@ -8,18 +8,20 @@
         display: flex;
         gap: 1.5rem;
         overflow-x: auto;
-        padding: 0.5rem 0 1.5rem 0;
+        padding: 1rem 0.5rem 2rem 0.5rem;
         scrollbar-width: thin;
-        scrollbar-color: var(--glass-border) transparent;
+        scrollbar-color: var(--secondary) transparent;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
     }
     .book-card-dashboard {
         width: 160px;
         flex-shrink: 0;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        scroll-snap-align: start;
     }
     .book-card-dashboard:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+        transform: translateY(-8px);
     }
     .book-cover-dashboard {
         width: 100%;

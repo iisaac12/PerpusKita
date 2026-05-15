@@ -96,8 +96,8 @@
         </table>
     </div>
 
-    <div style="margin-top: 2rem;">
-        {{ $members->links() }}
+    <div class="pagination-container" style="margin-top: 2rem; display: flex; justify-content: center;">
+        {{ $members->appends(request()->query())->links('pagination::bootstrap-4') }}
     </div>
 </div>
 @endsection
