@@ -466,20 +466,19 @@ header {
         font-size: 1.5rem;
     }
     .dashboard-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
     }
 
-    /* Option B: One card per row on mobile */
+    /* Keep Dashboard horizontal scroll as it is */
     .books-scroll {
-        flex-direction: column;
-        gap: 1.5rem;
-        overflow-x: visible;
-        padding: 0;
+        flex-direction: row;
+        gap: 1rem;
+        overflow-x: auto;
+        padding: 1rem 0.5rem;
     }
-    .book-card {
-        min-width: 100%;
-        width: 100%;
+    .book-card-dashboard {
+        width: 140px; /* Slightly smaller for 2-column feel */
     }
 }
 
