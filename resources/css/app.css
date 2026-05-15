@@ -381,28 +381,36 @@ header {
 }
 
 /* Responsive */
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+    }
+
+/* Tablet & Mobile Breakpoints */
 @media (max-width: 1024px) {
     .sidebar {
         width: 80px;
         padding: 1.5rem 1rem;
     }
-    .brand-name, .nav-text {
+    .brand-name, .nav-text, .nav-category {
         display: none;
     }
     .main-content {
         margin-left: 80px;
         width: calc(100% - 80px);
-        padding: 1.5rem;
+        padding: 2rem;
     }
     .dashboard-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
-        height: 70px; /* Fixed height for bottom bar */
+        height: 70px;
         bottom: 0;
         top: auto;
         padding: 0 1rem;
@@ -412,7 +420,6 @@ header {
         border-top: 1px solid var(--glass-border);
         overflow: hidden;
     }
-    .brand, .nav-category { display: none; }
     
     .nav-menu {
         flex-direction: row;
@@ -421,19 +428,16 @@ header {
         align-items: center;
         gap: 0.5rem;
         overflow-x: auto;
-        scrollbar-width: none; /* Hide scrollbar Firefox */
+        scrollbar-width: none;
         padding: 0 1rem;
         margin: 0;
         -webkit-overflow-scrolling: touch;
     }
-    .nav-menu::-webkit-scrollbar {
-        display: none; /* Hide scrollbar Chrome/Safari */
-    }
+    .nav-menu::-webkit-scrollbar { display: none; }
+    
     .nav-item {
         margin-top: 0 !important;
-        flex-shrink: 0; /* Prevent icons from being squashed */
-        display: flex;
-        justify-content: center;
+        flex-shrink: 0;
     }
     .nav-item a {
         padding: 0.6rem;
@@ -449,13 +453,17 @@ header {
     .main-content {
         margin-left: 0;
         width: 100%;
-        padding: 1rem; /* More compact padding for mobile */
-        padding-bottom: 80px; /* Space for bottom bar */
+        padding: 1.25rem;
+        padding-bottom: 90px;
     }
     header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
+        flex-direction: row; /* Keep profile on right for mobile header */
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    .header-left h1 {
+        font-size: 1.5rem;
     }
     .dashboard-grid {
         grid-template-columns: 1fr;
@@ -472,24 +480,6 @@ header {
     .book-card {
         min-width: 100%;
         width: 100%;
-    }
-    .book-cover {
-        aspect-ratio: 16/9; /* Slightly wider cover for vertical list feel */
-        height: 200px;
-    }
-
-    /* Modal Optimization */
-    .modal-content {
-        grid-template-columns: 1fr;
-        padding: 1.5rem;
-        gap: 1.5rem;
-        width: 95%;
-        margin: 10px;
-    }
-    .modal-left .book-cover {
-        height: 250px !important;
-        width: 160px;
-        margin: 0 auto;
     }
 }
 

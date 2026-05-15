@@ -28,25 +28,38 @@
         border-color: var(--secondary);
     }
     .results-grid {
-        column-count: 6;
-        column-gap: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 2rem;
         width: 100%;
         max-width: 1500px;
         margin: 0 auto;
     }
+    .empty-state {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
+        color: var(--text-muted);
+        text-align: center;
+        animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
     .book-card {
-        display: inline-block;
-        width: 100%;
-        margin-bottom: 2rem;
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        break-inside: avoid;
+        height: 100%;
     }
     .book-card:hover {
         transform: translateY(-8px);
     }
     .book-cover {
         width: 100%;
-        max-height: 400px;
+        aspect-ratio: 2/3;
         border-radius: var(--radius-md);
         overflow: hidden;
         background: rgba(255,255,255,0.03);
@@ -57,14 +70,14 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        display: block;
     }
-
-    @media (max-width: 1600px) { .results-grid { column-count: 5; } }
-    @media (max-width: 1200px) { .results-grid { column-count: 4; } }
-    @media (max-width: 992px) { .results-grid { column-count: 3; } }
-    @media (max-width: 768px) { .results-grid { column-count: 2; } }
-    @media (max-width: 480px) { .results-grid { column-count: 2; column-gap: 0.75rem; } }
+    
+    @media (max-width: 768px) {
+        .results-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+    }
 </style>
 @endsection
 
@@ -111,9 +124,10 @@
         </div>
     </div>
     @empty
-    <div style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: var(--text-muted);">
-        <span class="material-symbols-rounded" style="font-size: 4rem; display: block; margin-bottom: 1rem;">search_off</span>
-        Buku tidak ditemukan.
+    <div class="empty-state">
+        <span class="material-symbols-rounded" style="font-size: 5rem; color: var(--glass-border); margin-bottom: 1.5rem;">search_off</span>
+        <h3 style="color: #fff; margin-bottom: 0.5rem;">Buku tidak ditemukan</h3>
+        <p>Coba gunakan kata kunci lain atau pilih kategori yang berbeda.</p>
     </div>
     @endforelse
 </section>
