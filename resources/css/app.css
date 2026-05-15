@@ -417,16 +417,21 @@ header {
     .nav-menu {
         flex-direction: row;
         width: 100%;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
-        gap: 0;
-        overflow: hidden;
-        padding: 0;
+        gap: 0.5rem;
+        overflow-x: auto;
+        scrollbar-width: none; /* Hide scrollbar Firefox */
+        padding: 0 1rem;
         margin: 0;
+        -webkit-overflow-scrolling: touch;
+    }
+    .nav-menu::-webkit-scrollbar {
+        display: none; /* Hide scrollbar Chrome/Safari */
     }
     .nav-item {
-        margin-top: 0 !important; /* Reset margin-top auto dari logout */
-        flex: 1;
+        margin-top: 0 !important;
+        flex-shrink: 0; /* Prevent icons from being squashed */
         display: flex;
         justify-content: center;
     }
