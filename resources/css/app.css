@@ -440,7 +440,7 @@ header {
     .nav-item.active a {
         box-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
     }
-}
+
     .main-content {
         margin-left: 0;
         width: 100%;
