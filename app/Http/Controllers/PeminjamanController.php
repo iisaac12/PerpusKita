@@ -131,7 +131,7 @@ class PeminjamanController extends Controller
     }
 
     /**
-     * Update status of borrowing (Admin Only).
+     * Update status of borrowing (Admin and Client).
      */
     public function updateStatus(Request $request, $id)
     {
@@ -142,6 +142,19 @@ class PeminjamanController extends Controller
         $request->validate([
             'status' => 'required|in:menunggu,aktif,selesai,dibatalkan',
         ]);
+
+        $user = Auth::user();
+        if (!$user->isAdmin()) {
+            if ($peminjaman->id_peminjam !== $user->id_peminjam) {
+                return back()->with('error', 'Anda tidak memiliki akses untuk membatalkan peminjaman ini.');
+            }
+            if ($old_status !== 'menunggu') {
+                return back()->with('error', 'Hanya peminjaman dengan status menunggu yang dapat dibatalkan.');
+            }
+            if ($new_status !== 'dibatalkan') {
+                return back()->with('error', 'Aksi tidak valid.');
+            }
+        }
 
         DB::beginTransaction();
         try {

@@ -6,6 +6,8 @@ use App\Models\Peminjam;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -30,15 +32,35 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
+        $throttleKey = Str::transliterate(Str::lower($request->input('email')).'|'.$request->ip());
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            return back()->withErrors([
+                'email' => 'Terlalu banyak percobaan login. Akun dikunci sementara. Silakan coba lagi dalam ' . $seconds . ' detik.',
+            ])->onlyInput('email');
+        }
+
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
+            RateLimiter::clear($throttleKey);
 
             return redirect()->intended(route('dashboard'))
                 ->with('success', 'Selamat datang kembali, ' . Auth::user()->nama . '!');
         }
 
+        RateLimiter::hit($throttleKey, 60);
+
+        $remaining = RateLimiter::remaining($throttleKey, 5);
+        $errorMessage = 'Email atau password salah.';
+        if ($remaining > 0) {
+            $errorMessage .= ' Sisa percobaan login: ' . $remaining;
+        } else {
+            $errorMessage = 'Terlalu banyak percobaan login. Akun dikunci sementara. Silakan coba lagi dalam 60 detik.';
+        }
+
         return back()->withErrors([
-            'email' => 'Email atau password salah.',
+            'email' => $errorMessage,
         ])->onlyInput('email');
     }
 
