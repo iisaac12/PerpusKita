@@ -55,6 +55,7 @@
 
 @section('content')
 <section class="dashboard-grid">
+    @auth
     @if(Auth::user()->isAdmin())
         <!-- Admin Stat Cards -->
         <div class="glass-card stat-card">
@@ -130,6 +131,19 @@
             </div>
         </div>
     @endif
+    @else
+        <!-- Guest Welcome Card -->
+        <div class="glass-card" style="grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), rgba(103, 232, 249, 0.1));">
+            <div style="flex: 1; min-width: 250px;">
+                <h2 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Selamat datang di PerpusKita 👋</h2>
+                <p style="color: var(--text-muted);">Jelajahi koleksi buku kami secara bebas. Masuk ke akun Anda kapan saja untuk mulai meminjam buku.</p>
+            </div>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <a href="{{ route('library') }}" class="btn btn-primary">Jelajahi Koleksi</a>
+                <a href="{{ route('login') }}" class="btn btn-glass">Login</a>
+            </div>
+        </div>
+    @endauth
 </section>
 
 <section class="quick-actions" style="margin-bottom: 3rem;">
@@ -140,11 +154,15 @@
         </div>
         <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
             <a href="{{ route('library') }}" class="btn btn-primary">Cari Buku</a>
-            @if(Auth::user()->isAdmin())
-                <a href="{{ route('buku.create') }}" class="btn btn-glass">Tambah Buku</a>
+            @auth
+                @if(Auth::user()->isAdmin())
+                    <a href="{{ route('buku.create') }}" class="btn btn-glass">Tambah Buku</a>
+                @else
+                    <a href="{{ route('borrowing') }}" class="btn btn-glass">Pinjam Buku</a>
+                @endif
             @else
-                <a href="{{ route('borrowing') }}" class="btn btn-glass">Pinjam Buku</a>
-            @endif
+                <a href="{{ route('login') }}" class="btn btn-glass">Login untuk Pinjam</a>
+            @endauth
         </div>
     </div>
 </section>

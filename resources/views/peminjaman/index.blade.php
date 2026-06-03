@@ -4,6 +4,19 @@
 @section('header_title', 'Riwayat Peminjaman')
 
 @section('content')
+@guest
+<div class="glass-card" style="text-align: center; padding: 4rem 2rem;">
+    <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; border-radius: 50%; background: var(--secondary-glow, rgba(103,232,249,0.1)); display: flex; align-items: center; justify-content: center;">
+        <span class="material-symbols-rounded" style="font-size: 40px; color: var(--secondary, #67e8f9);">receipt_long</span>
+    </div>
+    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">Belum ada peminjaman</h3>
+    <p style="color: var(--text-muted); max-width: 420px; margin: 0 auto 2rem;">Masuk ke akun Anda untuk mulai meminjam buku dan memantau status peminjaman di sini.</p>
+    <button type="button" onclick="showLoginPrompt('{{ route('borrowing.create') }}')" class="btn btn-primary" style="margin: 0 auto;">
+        <span class="material-symbols-rounded">add</span>
+        Pinjam Buku Baru
+    </button>
+</div>
+@else
 <div class="glass-card">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
         <div>
@@ -146,4 +159,5 @@
         {{ $peminjaman->appends(request()->query())->links('pagination::bootstrap-4') }}
     </div>
 </div>
+@endguest
 @endsection

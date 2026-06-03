@@ -17,8 +17,15 @@ class PeminjamanController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+
+        // Tamu (belum login): tampilkan halaman peminjaman kosong + ajakan login.
+        if (!$user) {
+            $peminjaman = Peminjaman::whereRaw('1 = 0')->paginate(10);
+            return view('peminjaman.index', compact('peminjaman'));
+        }
+
         $query = Peminjaman::with(['peminjam', 'buku']);
-        
+
         if ($user->isAdmin()) {
             // Search (Nama Member, Judul Buku, ID)
             if ($request->filled('search')) {

@@ -49,6 +49,7 @@
                     </a>
                 </li>
 
+                @auth
                 @if(Auth::user()->isAdmin())
                 <div class="nav-category" style="padding: 1rem 1rem 0.5rem; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Admin Tools</div>
                 <li class="nav-item {{ Request::is('admin/kategori*') ? 'active' : '' }}">
@@ -95,6 +96,14 @@
                         <span class="nav-text">Logout</span>
                     </a>
                 </li>
+                @else
+                <li class="nav-item {{ Request::is('login') ? 'active' : '' }}" style="margin-top: auto;">
+                    <a href="{{ route('login') }}">
+                        <span class="material-symbols-rounded">login</span>
+                        <span class="nav-text">Login</span>
+                    </a>
+                </li>
+                @endauth
             </nav>
         </aside>
 
@@ -118,6 +127,7 @@
                     <h2 style="font-size: 1.75rem;">@yield('header_title', 'Halo, ' . $greeting . '!')</h2>
                 </div>
                 
+                @auth
                 <div class="user-profile">
                     <div class="avatar" style="display: flex; align-items: center; justify-content: center; color: var(--bg-color); font-weight: 700;">
                         {{ substr(Auth::user()->nama, 0, 1) }}
@@ -127,6 +137,12 @@
                         <p style="font-size: 0.75rem; color: var(--text-muted);">{{ ucfirst(Auth::user()->role) }} Profile</p>
                     </div>
                 </div>
+                @else
+                <a href="{{ route('login') }}" class="btn btn-primary">
+                    <span class="material-symbols-rounded">login</span>
+                    Login
+                </a>
+                @endauth
             </header>
 
             @if(session('success'))
@@ -237,13 +253,21 @@
                         const statusEl = document.getElementById('modalStatus');
                         if(buku.stok > 0) {
                             statusEl.innerHTML = `<span style="color: #4ade80;">Tersedia (${buku.stok})</span>`;
-                            @if(Auth::check() && !Auth::user()->isAdmin())
+                            @auth
+                                @if(!Auth::user()->isAdmin())
                                 document.getElementById('modalAction').innerHTML = `
                                     <a href="/borrowing/create?buku_id=${buku.id_buku}" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">
                                         Pinjam Buku Sekarang
                                     </a>
                                 `;
-                            @endif
+                                @endif
+                            @else
+                                document.getElementById('modalAction').innerHTML = `
+                                    <button type="button" onclick="showLoginPrompt('/borrowing/create?buku_id=${buku.id_buku}')" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">
+                                        Pinjam Buku Sekarang
+                                    </button>
+                                `;
+                            @endauth
                         } else {
                             statusEl.innerHTML = `<span style="color: #f87171;">Stok Habis</span>`;
                         }
@@ -258,6 +282,53 @@
 
         document.addEventListener('keydown', (e) => {
             if(e.key === 'Escape') closeModal();
+        });
+    </script>
+
+    <!-- Login Required Prompt (untuk tamu yang ingin meminjam) -->
+    <div id="loginPromptModal" class="modal-overlay" onclick="closeLoginPrompt(event)">
+        <div onclick="event.stopPropagation()" style="background: var(--bg-color, #15131f); border: 1px solid var(--glass-border); border-radius: var(--radius-md, 16px); padding: 2.5rem 2rem; max-width: 420px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
+            <div style="width: 64px; height: 64px; margin: 0 auto 1.25rem; border-radius: 50%; background: var(--secondary-glow, rgba(103,232,249,0.1)); display: flex; align-items: center; justify-content: center;">
+                <span class="material-symbols-rounded" style="font-size: 32px; color: var(--secondary, #67e8f9);">lock</span>
+            </div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem;">Silahkan login terlebih dahulu</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.75rem;">Anda perlu masuk ke akun untuk dapat meminjam buku. Setelah login, Anda akan diarahkan kembali ke halaman peminjaman.</p>
+            <div style="display: flex; gap: 0.75rem; justify-content: center;">
+                <button type="button" onclick="closeLoginPrompt()" class="btn btn-glass" style="flex: 1;">Batal</button>
+                <button type="button" onclick="proceedToLogin()" class="btn btn-primary" style="flex: 1; justify-content: center;">
+                    <span class="material-symbols-rounded">login</span>
+                    Login
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pendingBorrowUrl = "{{ route('login') }}";
+
+        // Dipanggil saat tamu menekan tombol pinjam. `url` adalah tujuan setelah login
+        // (rute terproteksi, sehingga middleware auth otomatis menyimpan intended URL).
+        function showLoginPrompt(url) {
+            pendingBorrowUrl = url || "{{ route('login') }}";
+            // Tutup modal detail buku jika sedang terbuka.
+            const bookModal = document.getElementById('bookModal');
+            if (bookModal) bookModal.classList.remove('active');
+
+            document.getElementById('loginPromptModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLoginPrompt(e) {
+            document.getElementById('loginPromptModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function proceedToLogin() {
+            window.location.href = pendingBorrowUrl;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLoginPrompt();
         });
     </script>
 
