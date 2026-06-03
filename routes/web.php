@@ -3,6 +3,11 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
+// Public Routes (dapat diakses tamu/guest tanpa login)
+Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+Route::get('/library', [\App\Http\Controllers\LibraryController::class, 'index'])->name('library');
+Route::get('/borrowing', [\App\Http\Controllers\PeminjamanController::class, 'index'])->name('borrowing');
+
 // Guest Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -15,11 +20,6 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
-
-    Route::get('/library', [\App\Http\Controllers\LibraryController::class, 'index'])->name('library');
-
-    Route::get('/borrowing', [\App\Http\Controllers\PeminjamanController::class, 'index'])->name('borrowing');
     Route::get('/history', [\App\Http\Controllers\HistoryController::class, 'index'])->name('history');
     Route::get('/borrowing/create', [\App\Http\Controllers\PeminjamanController::class, 'create'])->name('borrowing.create');
     Route::post('/borrowing', [\App\Http\Controllers\PeminjamanController::class, 'store'])->name('borrowing.store');

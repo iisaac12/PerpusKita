@@ -16,7 +16,13 @@ class DashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
-        
+
+        // Tamu (belum login): tampilkan dashboard versi umum tanpa statistik personal.
+        if (!$user) {
+            $recent_books = Buku::with('categories')->latest()->take(5)->get();
+            return view('dashboard', ['stats' => null, 'recent_books' => $recent_books]);
+        }
+
         if ($user->isAdmin()) {
             // Admin Stats: Global
             $stats = [

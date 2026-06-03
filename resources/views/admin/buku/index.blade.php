@@ -26,7 +26,7 @@
             <select name="category" class="form-control" onchange="this.form.submit()">
                 <option value="all">Semua Kategori</option>
                 @foreach($categories as $cat)
-                    <option value="{{ $cat->id_kategori }}" {{ request('category') == $cat->id_kategori ? 'selected' : '' }}>{{ $cat->nama_kategori }}</option>
+                <option value="{{ $cat->id_kategori }}" {{ request('category') == $cat->id_kategori ? 'selected' : '' }}>{{ $cat->nama_kategori }}</option>
                 @endforeach
             </select>
         </div>
@@ -44,9 +44,9 @@
             </select>
         </div>
         @if(request()->anyFilled(['search', 'category', 'sort', 'order']))
-            <a href="{{ route('buku.index') }}" class="btn btn-glass" style="color: #f87171; border-color: rgba(248, 113, 113, 0.2);">
-                <span class="material-symbols-rounded" style="font-size: 1.2rem;">restart_alt</span>
-            </a>
+        <a href="{{ route('buku.index') }}" class="btn btn-glass" style="color: #f87171; border-color: rgba(248, 113, 113, 0.2);">
+            <span class="material-symbols-rounded" style="font-size: 1.2rem;">restart_alt</span>
+        </a>
         @endif
     </form>
 
@@ -68,11 +68,11 @@
                         <div style="display: flex; align-items: center; gap: 1rem;">
                             <div style="width: 40px; height: 56px; border-radius: 4px; background: #2b2930; overflow: hidden; border: 1px solid var(--glass-border);">
                                 @if($item->cover_buku)
-                                    <img src="{{ asset('storage/' . $item->cover_buku) }}" alt="Cover" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="{{ asset('storage/' . $item->cover_buku) }}" alt="Cover" style="width: 100%; height: 100%; object-fit: cover;">
                                 @else
-                                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
-                                        <span class="material-symbols-rounded" style="font-size: 1.25rem;">image_not_supported</span>
-                                    </div>
+                                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                                    <span class="material-symbols-rounded" style="font-size: 1.25rem;">image_not_supported</span>
+                                </div>
                                 @endif
                             </div>
                             <div>
